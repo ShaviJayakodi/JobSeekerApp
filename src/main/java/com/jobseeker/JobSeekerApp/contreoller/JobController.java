@@ -44,7 +44,7 @@ public class JobController {
     @PutMapping("/deleteJob")
     public ResponseEntity<CustomizedResponse> deleteJobById(@RequestParam long jobId)
     {
-        return new ResponseEntity<CustomizedResponse>(jobService.(jobId),HttpStatus.OK);
+        return new ResponseEntity<CustomizedResponse>(jobService.deleteJobById(jobId),HttpStatus.OK);
     }
 
 }
