@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("jobController")
+@RequestMapping("jobs")
 public class JobController {
 
     @Autowired

@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface JobRepository extends JpaRepository <Job , Long> {
     @Query(value = "SELECT * FROM Job WHERE status = 1",nativeQuery = true)
-    public List<Job> getJobByStatus();
+    List<Job> getJobByStatus();
 
     @Query(value = "SELECT * FROM Job WHERE jobId= ?1 AND status = 1",nativeQuery = true)
-    public Job getJobByJobId(long jobId);
+    Job getJobByJobId(long jobId);
 }

@@ -62,8 +62,7 @@ public class JobService {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         List<String> errorStatus = new ArrayList<>();
        try {
-           List<Job> jobs = modelMapper.map(jobRepository.getJobByStatus(), new TypeToken<List<Job>>() {
-           }.getType());
+           List<Job> jobs = modelMapper.map(jobRepository.getJobByStatus(), new TypeToken<List<Job>>() {}.getType());
            if (jobs.size() > 0) {
                errorStatus.add("Jobs Found.!");
                customizedResponse.setSuccess(true);
