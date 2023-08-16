@@ -13,7 +13,7 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker , Long> {
     @Query(value = "SELECT * FROM job_seeker WHERE status = 1" , nativeQuery = true)
     List<JobSeeker> getAllJobSeekerByStatus();
 
-    @Query(value ="SELECT COALESCE(MAX(job_seeker_id), 0) + 1 FROM job_seeker",nativeQuery = true)
+    @Query(value ="SELECT COALESCE(MAX(job_seeker_id), 0) FROM job_seeker",nativeQuery = true)
     int getNextJobSeekerId();
 
 

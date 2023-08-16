@@ -1,20 +1,26 @@
 package com.jobseeker.JobSeekerApp.service;
 
 import com.jobseeker.JobSeekerApp.dto.ConsultantDTO;
+import com.jobseeker.JobSeekerApp.dto.UserDTO;
 import com.jobseeker.JobSeekerApp.entity.Consultant;
+import com.jobseeker.JobSeekerApp.entity.Job;
+import com.jobseeker.JobSeekerApp.entity.User;
 import com.jobseeker.JobSeekerApp.enums.stakeHolderValues;
 import com.jobseeker.JobSeekerApp.enums.statusValue;
 import com.jobseeker.JobSeekerApp.repository.ConsultantRepository;
+import com.jobseeker.JobSeekerApp.repository.JobRepository;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+
 public class ConsultantService {
 
     @Autowired
@@ -26,23 +32,52 @@ public class ConsultantService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JobRepository jobRepository;
+
     public CustomizedResponse saveConsultant(ConsultantDTO consultantDTO)
     {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         List<String> errorStatus = new ArrayList<>();
         Consultant consultant = new Consultant();
+        User user = new User();
+        Job job = new Job();
         int nextId = consultantRepository.getNextConsultantId();
         try {
+
+            job = modelMapper.map(jobRepository.findById(consultantDTO.getJobId()).get(),Job.class);
             consultant = modelMapper.map(consultantDTO, Consultant.class);
             String regNo = commonService.generateRegNo(nextId, stakeHolderValues.CONSULTANT.code());
             consultant.setRegNo(regNo);
+            consultant.setJob(job);
+
             consultant.setStatus(statusValue.ACTIVE.sts());
+
             if(consultantRepository.save(consultant)!= null)
             {
-                errorStatus.add("Consultant Registered Successfully.!");
-                customizedResponse.setStatusList(errorStatus);
-                customizedResponse.setSuccess(true);
-                customizedResponse.setResponse(consultant);
+                user.setUserName(consultantDTO.getEmail());
+                user.setRegNo(regNo);
+                user.setUserType("CONSULTANT");
+                user.setPassword(consultantDTO.getPassword());
+
+                if(userService.saveUser(user).isSuccess()==true)
+                {
+                    errorStatus.add("Consultant Registered Successfully.!");
+                    customizedResponse.setStatusList(errorStatus);
+                    customizedResponse.setSuccess(true);
+                    customizedResponse.setResponse(consultant);
+                }
+                else
+                {
+                    consultantRepository.deleteById(consultant.getConsultantId());
+                    errorStatus.add("Registration Unsuccessful.!");
+                    customizedResponse.setStatusList(errorStatus);
+                    customizedResponse.setSuccess(false);
+                }
+
             }
             else
             {
@@ -90,6 +125,67 @@ public class ConsultantService {
 
         return customizedResponse;
     }
+
+    public CustomizedResponse getConsultantById(long consultantId)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        Consultant consultant = new Consultant();
+        try {
+            if(consultantRepository.existsById(consultantId))
+            {
+                customizedResponse.setResponse(consultantRepository.getConsultantByConsultantIdAndStatus(consultantId));
+                errorStatus.add("Record Found.!");
+                customizedResponse.setSuccess(true);
+                customizedResponse.setStatusList(errorStatus);
+            }
+            else
+            {
+                errorStatus.add("Record Not Found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error -> "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
+    public CustomizedResponse getConsultantByRegNo(String regNo)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        Consultant consultant = new Consultant();
+        try {
+            if(consultantRepository.getConsultantByConsultantIdAndStatus(regNo)!=null)
+            {
+                customizedResponse.setResponse(consultantRepository.getConsultantByConsultantIdAndStatus(regNo));
+                errorStatus.add("Record Found.!");
+                customizedResponse.setSuccess(true);
+                customizedResponse.setStatusList(errorStatus);
+            }
+            else
+            {
+                errorStatus.add("Record Not Found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error -> "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
 
 
 }

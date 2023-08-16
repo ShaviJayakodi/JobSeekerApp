@@ -12,7 +12,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class ConsultantDTO {
     private long consultantId;
-    private String regNo;private String title;
+    private String regNo;
+    private String title;
     private String firstName;
     private String lastName;
     private String gender;
@@ -27,4 +28,5 @@ public class ConsultantDTO {
     private String description;
     private long jobId;
     private int status;
+    private String password;
 }

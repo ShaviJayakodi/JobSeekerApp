@@ -13,9 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class Consultant {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long consultantId;
-    private String regNo;private String title;
+    private String regNo;
+    private String title;
     private String firstName;
     private String lastName;
     private String gender;
@@ -31,6 +32,7 @@ public class Consultant {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Job job;
     private int status;
+
 
 
 }

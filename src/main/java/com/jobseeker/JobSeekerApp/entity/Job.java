@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class Job {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long jobId;
     private String jobTitle;
     private int status;

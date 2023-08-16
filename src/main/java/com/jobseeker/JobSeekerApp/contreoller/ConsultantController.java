@@ -30,4 +30,10 @@ public class ConsultantController {
     {
         return new ResponseEntity<CustomizedResponse>(consultantService.saveConsultant(consultantDTO),HttpStatus.OK);
     }
+
+    @GetMapping("/getConsultantById")
+    public ResponseEntity <CustomizedResponse> getConsultantById (@RequestParam  long consultantId)
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.getConsultantById(consultantId),HttpStatus.OK);
+    }
 }

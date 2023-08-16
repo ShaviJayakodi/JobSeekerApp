@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class JobSeeker {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long jobSeekerId;
     private String regNo;
     private String title;

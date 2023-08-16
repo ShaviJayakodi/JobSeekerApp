@@ -10,9 +10,15 @@ import java.util.List;
 @Repository
 public interface ConsultantRepository extends JpaRepository<Consultant,Long> {
 
-    @Query(value ="SELECT COALESCE(MAX(job_seeker_id), 0) + 1 FROM job_seeker",nativeQuery = true)
+    @Query(value ="SELECT COALESCE(MAX(consultant_id), 0) FROM consultant",nativeQuery = true)
     int getNextConsultantId();
 
-    @Query(value = "SELECT * FROM job_seeker WHERE status = 1" , nativeQuery = true)
+    @Query(value = "SELECT * FROM consultant WHERE status = 1" , nativeQuery = true)
     List<Consultant> getConsultantByStatus();
+
+    @Query(value = "SELECT * FROM consultant WHERE status = 1 AND consultant_id=?1", nativeQuery = true)
+    Consultant getConsultantByConsultantIdAndStatus(long id);
+
+    @Query(value = "SELECT * FROM consultant WHERE status = 1 AND reg_No=?1", nativeQuery = true)
+    Consultant getConsultantByConsultantIdAndStatus(String regNo);
 }
