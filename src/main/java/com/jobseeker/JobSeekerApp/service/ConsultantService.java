@@ -9,6 +9,7 @@ import com.jobseeker.JobSeekerApp.enums.stakeHolderValues;
 import com.jobseeker.JobSeekerApp.enums.statusValue;
 import com.jobseeker.JobSeekerApp.repository.ConsultantRepository;
 import com.jobseeker.JobSeekerApp.repository.JobRepository;
+import com.jobseeker.JobSeekerApp.repository.UserRepository;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -38,6 +39,9 @@ public class ConsultantService {
     @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public CustomizedResponse saveConsultant(ConsultantDTO consultantDTO)
     {
         CustomizedResponse customizedResponse = new CustomizedResponse();
@@ -54,7 +58,7 @@ public class ConsultantService {
             consultant.setRegNo(regNo);
             consultant.setJob(job);
 
-            consultant.setStatus(statusValue.ACTIVE.sts());
+            consultant.setStatus(statusValue.PENDING.sts());
 
             if(consultantRepository.save(consultant)!= null)
             {
@@ -62,10 +66,11 @@ public class ConsultantService {
                 user.setRegNo(regNo);
                 user.setUserType("CONSULTANT");
                 user.setPassword(consultantDTO.getPassword());
+                user.setStatus(statusValue.PENDING.sts());
 
                 if(userService.saveUser(user).isSuccess()==true)
                 {
-                    errorStatus.add("Consultant Registered Successfully.!");
+                    errorStatus.add("Consultant Registration Under the Approval!");
                     customizedResponse.setStatusList(errorStatus);
                     customizedResponse.setSuccess(true);
                     customizedResponse.setResponse(consultant);
@@ -134,7 +139,7 @@ public class ConsultantService {
         try {
             if(consultantRepository.existsById(consultantId))
             {
-                customizedResponse.setResponse(consultantRepository.getConsultantByConsultantIdAndStatus(consultantId));
+                customizedResponse.setResponse(consultantRepository.getConsultantByConsultantIdAndStatus(consultantId,statusValue.ACTIVE.sts()));
                 errorStatus.add("Record Found.!");
                 customizedResponse.setSuccess(true);
                 customizedResponse.setStatusList(errorStatus);
@@ -186,6 +191,54 @@ public class ConsultantService {
         return customizedResponse;
     }
 
+    public CustomizedResponse consultantApproval(long consultantId)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            Consultant consultant = consultantRepository.getConsultantByConsultantIdAndStatus(consultantId,statusValue.PENDING.sts());
+            if(consultant != null) {
+                consultant.setStatus(statusValue.ACTIVE.sts());
+                User user = userRepository.getUserByRegNo(consultant.getRegNo());
+                if (user != null) {
+                    user.setStatus(statusValue.ACTIVE.sts());
+                }
+                else
+                {
+                    user.setUserName(consultant.getEmail());
+                    user.setRegNo(consultant.getRegNo());
+                    user.setUserType("CONSULTANT");
+                    user.setPassword("123@#Com");
+                    user.setStatus(statusValue.ACTIVE.sts());
+                }
+                if((consultantRepository.save(consultant) !=null) && (userRepository.save(user))!=null){
+                    customizedResponse.setSuccess(true);
+                    errorStatus.add("Approved!");
+                    customizedResponse.setStatusList(errorStatus);
+                }
+                else
+                {
+                    customizedResponse.setSuccess(false);
+                    errorStatus.add("Got error from approval. Please try again!");
+                    customizedResponse.setStatusList(errorStatus);
+                }
+            }
+            else {
+                customizedResponse.setSuccess(false);
+                errorStatus.add("Consultant Not Found");
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            customizedResponse.setSuccess(false);
+            errorStatus.add("Error -> "+exception);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
 
 
 }

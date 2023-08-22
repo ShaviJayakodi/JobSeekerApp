@@ -25,7 +25,7 @@ public class ConsultantController {
         return new ResponseEntity<CustomizedResponse>(consultantService.getAllConsultant(), HttpStatus.OK);
     }
 
-    @PostMapping("/saveConsultant")
+    @PostMapping("/saveConsultantReq")
     public ResponseEntity<CustomizedResponse> saveConsultant(@RequestBody ConsultantDTO consultantDTO)
     {
         return new ResponseEntity<CustomizedResponse>(consultantService.saveConsultant(consultantDTO),HttpStatus.OK);
@@ -36,4 +36,11 @@ public class ConsultantController {
     {
         return new ResponseEntity<CustomizedResponse>(consultantService.getConsultantById(consultantId),HttpStatus.OK);
     }
+
+    @PostMapping("/approve")
+    public ResponseEntity<CustomizedResponse> consultantApproval(@RequestParam  long consultantId)
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.consultantApproval(consultantId),HttpStatus.OK);
+    }
+
 }

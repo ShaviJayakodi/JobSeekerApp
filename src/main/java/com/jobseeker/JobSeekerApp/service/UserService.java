@@ -31,4 +31,48 @@ public class UserService {
         return customizedResponse;
     }
 
+    public boolean checkEmailAddress(String email)
+    {
+        boolean isValid = false;
+        User user = userRepository.checkEmail(email);
+        if(user!=null)
+        {
+            isValid = false;
+        }
+        else
+        {
+            isValid =true;
+        }
+        return isValid;
+    }
+
+    public CustomizedResponse getUserByRegNo(String regNo)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus =new ArrayList<>();
+        try
+        {
+            User user = userRepository.getUserByRegNo(regNo);
+            if(user != null)
+            {
+                customizedResponse.setResponse(user);
+                customizedResponse.setSuccess(true);
+            }
+            else
+            {
+                errorStatus.add("User Not Found!");
+                customizedResponse.setSuccess(false);
+            }
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error -> "+exception);
+            customizedResponse.setSuccess(false);
+        }
+        return customizedResponse;
+    }
+
+
+
+
 }

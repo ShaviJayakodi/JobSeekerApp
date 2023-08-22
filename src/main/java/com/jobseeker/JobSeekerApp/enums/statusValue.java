@@ -2,7 +2,9 @@ package com.jobseeker.JobSeekerApp.enums;
 
 public enum statusValue {
     ACTIVE(1),
-    DEACTIVE(0);
+    PENDING(2),
+    DEACTIVE (0);
+
     private int sts;
 
 
