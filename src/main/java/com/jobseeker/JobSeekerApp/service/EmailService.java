@@ -7,13 +7,57 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private UserService userService;
+
     public CustomizedResponse registerMail(MailRegisterDTO mailRegisterDTO)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            boolean isValidEmailAddress = userService.checkEmailAddress(mailRegisterDTO.getEmail());
+            if(isValidEmailAddress)
+            {
+                System.out.println("VALID");
+
+                if(mailRegisterDTO.getType().equals("CONSULTANT"))
+                {
+                    System.out.println("CONSULTANT");
+                }
+                else
+                {
+                    System.out.println("Job Seeker");
+                }
+            }
+            else
+            {
+                System.out.println("Already Exist Email Address.!");
+
+                errorStatus.add("Already Exist Email Address.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+        }
+        catch (Exception exception)
+        {
+            System.out.println(exception);
+        }
+        return customizedResponse;
+    }
+
+
+
+    public CustomizedResponse registerMail1(MailRegisterDTO mailRegisterDTO)
     {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         try

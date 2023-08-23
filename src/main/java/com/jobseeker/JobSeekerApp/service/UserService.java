@@ -19,6 +19,7 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
     public CustomizedResponse saveUser(User user) {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         if(userRepository.save(user) != null)
