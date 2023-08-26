@@ -1,6 +1,8 @@
 package com.jobseeker.JobSeekerApp.service;
 
 import com.jobseeker.JobSeekerApp.dto.MailRegisterDTO;
+import com.jobseeker.JobSeekerApp.entity.Admin;
+import com.jobseeker.JobSeekerApp.entity.User;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -54,6 +56,35 @@ public class EmailService {
         }
         return customizedResponse;
     }
+
+    public boolean newAdminMail(User user)
+    {
+        boolean isSent = false;
+       try {
+           SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+           String subject = "Job Seeker System Admin Registration.!";
+           String fromMail = "jobseekerwebmail@gmail.com";
+           simpleMailMessage.setTo(user.getUserName());
+           simpleMailMessage.setSubject(subject);
+           simpleMailMessage.setText("YOU HAVE REGISTERD TO SYSTEM AS A ADMIN. You can login using your email as a username and<br/>" +
+                   "password = " + user.getPassword());
+
+           simpleMailMessage.setFrom(fromMail);
+           javaMailSender.send(simpleMailMessage);
+           isSent = true;
+       }
+       catch (Exception exception)
+       {
+           throw exception;
+       }
+
+       return isSent;
+
+    }
+
+
+
+
 
 
 
