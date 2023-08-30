@@ -240,5 +240,36 @@ public class ConsultantService {
         return customizedResponse;
     }
 
+    public CustomizedResponse getConsultantByJobId(long jobId)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try {
+            List<Consultant> consultantList = modelMapper.map(consultantRepository.getConsultantByStatusAndJob(statusValue.ACTIVE.sts(),jobId),new TypeToken<List<Consultant>>(){}.getType());
+            if(consultantList.size()>0)
+            {
+                errorStatus.add("Data Found.!");
+                customizedResponse.setStatusList(errorStatus);
+                customizedResponse.setResponse(consultantList);
+                customizedResponse.setSuccess(true);
+            }
+            else
+            {
+                errorStatus.add("No any consultant to job.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
 
 }

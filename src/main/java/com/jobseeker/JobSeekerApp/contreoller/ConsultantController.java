@@ -19,7 +19,7 @@ public class ConsultantController {
     @Autowired
     private ConsultantService consultantService;
 
-    @GetMapping("/getAllConsultants")
+    @GetMapping("/getAllConsultant")
     public ResponseEntity<CustomizedResponse> getAllConsultants()
     {
         return new ResponseEntity<CustomizedResponse>(consultantService.getAllConsultant(), HttpStatus.OK);
@@ -41,6 +41,12 @@ public class ConsultantController {
     public ResponseEntity<CustomizedResponse> consultantApproval(@RequestParam  long consultantId)
     {
         return new ResponseEntity<CustomizedResponse>(consultantService.consultantApproval(consultantId),HttpStatus.OK);
+    }
+
+    @GetMapping("/getConsultantByJobId")
+    public ResponseEntity<CustomizedResponse> getConsultantByJobId(@RequestParam long jobId)
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.getConsultantByJobId(jobId),HttpStatus.OK);
     }
 
 }
