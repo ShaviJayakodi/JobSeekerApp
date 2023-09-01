@@ -27,14 +27,20 @@ public class EmailService {
         List<String> errorStatus = new ArrayList<>();
         try
         {
+            System.out.println(mailRegisterDTO);
             boolean isValidEmailAddress = userService.checkEmailAddress(mailRegisterDTO.getEmail());
             if(isValidEmailAddress)
             {
-                System.out.println("VALID");
-
+                String subject = "Register to Job Seeker Application";
+                String fromMail = "jobseekerwebmail@gmail.com";
+                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
                 if(mailRegisterDTO.getType().equals("CONSULTANT"))
                 {
                     System.out.println("CONSULTANT");
+                    customizedResponse.setSuccess(true);
+                    errorStatus.add("OKAY");
+                    customizedResponse.setStatusList(errorStatus);
+                    customizedResponse.setResponse(mailRegisterDTO);
                 }
                 else
                 {
@@ -52,7 +58,9 @@ public class EmailService {
         }
         catch (Exception exception)
         {
-            System.out.println(exception);
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setStatusList(errorStatus);
+            customizedResponse.setSuccess(false);
         }
         return customizedResponse;
     }

@@ -21,7 +21,6 @@ public class Admin {
     public String firstName;
     public String lastName;
     public String email;
-    public String passWord;
     public int isFirstLogin;
     public int status;
 

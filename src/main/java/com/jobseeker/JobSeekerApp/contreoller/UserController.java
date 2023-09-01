@@ -5,11 +5,9 @@ import com.jobseeker.JobSeekerApp.entity.User;
 import com.jobseeker.JobSeekerApp.service.UserService;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -18,6 +16,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/login")
+    public ResponseEntity<CustomizedResponse> loginUser (@RequestBody User user)
+    {
+        return new ResponseEntity<CustomizedResponse>(userService.loginUser(user), HttpStatus.OK);
+    }
     public ResponseEntity<CustomizedResponse> saveUser(@RequestBody UserDTO userDTO)
     {
         return null;

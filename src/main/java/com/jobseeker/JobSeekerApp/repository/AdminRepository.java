@@ -11,4 +11,7 @@ public interface AdminRepository extends JpaRepository<Admin , Long> {
     @Query(value ="SELECT COALESCE(MAX(admin_id), 0) FROM admin",nativeQuery = true)
     int getNextAdminId();
 
+    @Query(value = "SELECT * FROM admin WHERE reg_no = ?1 AND status = 1", nativeQuery = true)
+    Admin getAdminByRegNo(String regNo);
+
 }
