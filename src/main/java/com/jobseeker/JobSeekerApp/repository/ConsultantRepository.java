@@ -24,4 +24,7 @@ public interface ConsultantRepository extends JpaRepository<Consultant,Long> {
 
     @Query(value = "SELECT * FROM consultant WHERE status = ?1 AND job_job_id =?2" ,nativeQuery = true)
     List<Consultant> getConsultantByStatusAndJob(int status, long jobId);
+
+    @Query(value = "SELECT * FROM consultant WHERE status = ?1",nativeQuery = true)
+    List<Consultant> getPendingApprovals(int status);
 }

@@ -24,5 +24,6 @@ public class JobSeekerDTO {
     private String tel1;
     private String tel2;
     private String email;
+    private String password;
     private int status;
 }

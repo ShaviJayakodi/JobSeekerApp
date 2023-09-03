@@ -38,9 +38,17 @@ public class ConsultantController {
     }
 
     @PostMapping("/approve")
-    public ResponseEntity<CustomizedResponse> consultantApproval(@RequestParam  long consultantId)
+    public ResponseEntity<CustomizedResponse> consultantApproval(@RequestBody ConsultantDTO consultantDTO)
     {
-        return new ResponseEntity<CustomizedResponse>(consultantService.consultantApproval(consultantId),HttpStatus.OK);
+        String type = "Approve";
+        return new ResponseEntity<CustomizedResponse>(consultantService.consultantApproval(consultantDTO.getConsultantId(), type),HttpStatus.OK);
+    }
+
+    @PostMapping("/reject")
+    public ResponseEntity<CustomizedResponse> consultantReject(@RequestBody ConsultantDTO consultantDTO)
+    {
+        String type = "Reject";
+        return new ResponseEntity<CustomizedResponse>(consultantService.consultantApproval(consultantDTO.getConsultantId(), type),HttpStatus.OK);
     }
 
     @GetMapping("/getConsultantByJobId")
@@ -49,4 +57,15 @@ public class ConsultantController {
         return new ResponseEntity<CustomizedResponse>(consultantService.getConsultantByJobId(jobId),HttpStatus.OK);
     }
 
+    @GetMapping("/getPendingApprovals")
+    public ResponseEntity<CustomizedResponse> getPendingApprovals ()
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.getPendingApprovals(),HttpStatus.OK);
+    }
+
+    @GetMapping("/getConsultantByRegNo")
+    public ResponseEntity<CustomizedResponse> getConsultantByRegNo(@RequestParam String regNo)
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.getConsultantByRegNo(regNo),HttpStatus.OK);
+    }
 }

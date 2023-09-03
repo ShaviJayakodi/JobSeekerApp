@@ -191,18 +191,23 @@ public class ConsultantService {
         return customizedResponse;
     }
 
-    public CustomizedResponse consultantApproval(long consultantId)
+    public CustomizedResponse consultantApproval(long consultantId,String type)
     {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         List<String> errorStatus = new ArrayList<>();
+        int status = 0;
+        if(type.equals("Approve"))
+        {
+           status = 1;
+        }
         try
         {
             Consultant consultant = consultantRepository.getConsultantByConsultantIdAndStatus(consultantId,statusValue.PENDING.sts());
             if(consultant != null) {
-                consultant.setStatus(statusValue.ACTIVE.sts());
+                consultant.setStatus(status);
                 User user = userRepository.getUserByRegNo(consultant.getRegNo());
                 if (user != null) {
-                    user.setStatus(statusValue.ACTIVE.sts());
+                    user.setStatus(status);
                 }
                 else
                 {
@@ -210,7 +215,7 @@ public class ConsultantService {
                     user.setRegNo(consultant.getRegNo());
                     user.setUserType("CONSULTANT");
                     user.setPassword("123@#Com");
-                    user.setStatus(statusValue.ACTIVE.sts());
+                    user.setStatus(status);
                 }
                 if((consultantRepository.save(consultant) !=null) && (userRepository.save(user))!=null){
                     customizedResponse.setSuccess(true);
@@ -267,6 +272,34 @@ public class ConsultantService {
             errorStatus.add("Error => "+exception);
             customizedResponse.setSuccess(false);
             customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+    public CustomizedResponse getPendingApprovals()
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorList = new ArrayList<>();
+        try {
+
+            List<Consultant> pendingConsultant = modelMapper.map(consultantRepository.getPendingApprovals(statusValue.PENDING.sts()),new TypeToken<List<Consultant>>(){}.getType());
+            if(pendingConsultant.size()>0)
+            {
+                customizedResponse.setSuccess(true);
+                customizedResponse.setResponse(pendingConsultant);
+
+            }
+            else
+            {
+                errorList.add("No pending request for approve.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorList);
+            }
+        }
+        catch (Exception exception)
+        {
+            errorList.add("Error => "+exception );
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorList);
         }
         return customizedResponse;
     }

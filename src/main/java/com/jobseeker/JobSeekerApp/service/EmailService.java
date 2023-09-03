@@ -36,16 +36,38 @@ public class EmailService {
                 SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
                 if(mailRegisterDTO.getType().equals("CONSULTANT"))
                 {
-                    System.out.println("CONSULTANT");
-                    customizedResponse.setSuccess(true);
-                    errorStatus.add("OKAY");
-                    customizedResponse.setStatusList(errorStatus);
-                    customizedResponse.setResponse(mailRegisterDTO);
+                    simpleMailMessage.setTo(mailRegisterDTO.getEmail().trim());
+                    simpleMailMessage.setText(
+                            "<html><body>" +
+                                    "<h1>Welcome to Job Seeker App</h1>" +
+                                    "<p>Congratulations! Your email verification was successful.</p>" +
+                                    "<p>You can register in the system by clicking the following button:</p>" +
+                                    "<a href='http://localhost:3000/master/addNewConsultant?email="+mailRegisterDTO.getEmail()+"'>" +
+                                    "<button style='background-color: #007bff; color: #ffffff; padding: 10px 20px; border: none; cursor: pointer;'>Register Now</button>" +
+                                    "</a>" +
+                                    "</body></html>");
                 }
-                else
+                else if(mailRegisterDTO.getType().equals("JOBSEEKER"))
                 {
-                    System.out.println("Job Seeker");
+                    simpleMailMessage.setTo(mailRegisterDTO.getEmail().trim());
+                    simpleMailMessage.setText(
+                            "<html><body>" +
+                            "<h1>Welcome to Job Seeker App</h1>" +
+                            "<p>Congratulations! Your email verification was successful.</p>" +
+                            "<p>You can register in the system by clicking the following button:</p>" +
+                            "<a href='http://localhost:3000/master/addNewJobSeeker?email="+mailRegisterDTO.getEmail()+"'>" +
+                            "<button style='background-color: #007bff; color: #ffffff; padding: 10px 20px; border: none; cursor: pointer;'>Register Now</button>" +
+                            "</a>" +
+                            "</body></html>");
                 }
+                simpleMailMessage.setFrom(fromMail);
+                simpleMailMessage.setSubject(subject);
+                javaMailSender.send(simpleMailMessage);
+                errorStatus.add("Email Sent.!");
+                customizedResponse.setStatusList(errorStatus);
+                customizedResponse.setSuccess(true);
+                customizedResponse.setResponse(mailRegisterDTO);
+
             }
             else
             {

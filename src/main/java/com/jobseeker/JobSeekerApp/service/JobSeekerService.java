@@ -2,9 +2,11 @@ package com.jobseeker.JobSeekerApp.service;
 
 import com.jobseeker.JobSeekerApp.dto.JobSeekerDTO;
 import com.jobseeker.JobSeekerApp.entity.JobSeeker;
+import com.jobseeker.JobSeekerApp.entity.User;
 import com.jobseeker.JobSeekerApp.enums.stakeHolderValues;
 import com.jobseeker.JobSeekerApp.enums.statusValue;
 import com.jobseeker.JobSeekerApp.repository.JobSeekerRepository;
+import com.jobseeker.JobSeekerApp.repository.UserRepository;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -26,12 +28,16 @@ public class JobSeekerService {
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     public CustomizedResponse saveJobSeeker(JobSeekerDTO jobSeekerDTO)
     {
         CustomizedResponse customizedResponse =  new CustomizedResponse();
         List<String> errorStatus = new ArrayList<>();
         int nextId = jobSeekerRepository.getNextJobSeekerId();
+        User user = new User();
         String regNo = commonService.generateRegNo(nextId, stakeHolderValues.SEEKER.code());
         try {
                 JobSeeker jobSeeker = modelMapper.map(jobSeekerDTO,JobSeeker.class);
@@ -40,10 +46,25 @@ public class JobSeekerService {
 
                 if(jobSeekerRepository.save(jobSeeker) != null)
                 {
-                    errorStatus.add("Job Seeker Registered Successfully.!");
-                    customizedResponse.setStatusList(errorStatus);
-                    customizedResponse.setSuccess(true);
-                    customizedResponse.setResponse(jobSeeker);
+                    user.setUserType("JOBSEEKER");
+                    user.setUserName(jobSeeker.getEmail());
+                    user.setRegNo(jobSeeker.getRegNo());
+                    user.setPassword(jobSeekerDTO.getPassword());
+                    user.setStatus(statusValue.ACTIVE.sts());
+                    if(userRepository.save(user) != null)
+                    {
+                        errorStatus.add("Job Seeker Registered Successfully.!");
+                        customizedResponse.setStatusList(errorStatus);
+                        customizedResponse.setSuccess(true);
+                        customizedResponse.setResponse(jobSeeker);
+                    }
+                    else
+                    {
+                        jobSeekerRepository.delete(jobSeeker);
+                        errorStatus.add("Registration Unsuccessful.!");
+                        customizedResponse.setStatusList(errorStatus);
+                        customizedResponse.setSuccess(false);
+                    }
                 }
                 else
                 {
