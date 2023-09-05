@@ -1,5 +1,6 @@
 package com.jobseeker.JobSeekerApp.contreoller;
 
+import com.jobseeker.JobSeekerApp.dto.AppointmentDTO;
 import com.jobseeker.JobSeekerApp.dto.CheckDateDTO;
 import com.jobseeker.JobSeekerApp.service.AppointmentService;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
@@ -33,6 +34,24 @@ public class AppointmentController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PostMapping("/makeAnAppointment")
+    public ResponseEntity<CustomizedResponse> makeAnAppointment(@RequestBody AppointmentDTO appointmentDTO)
+    {
+        return new ResponseEntity<CustomizedResponse>(appointmentService.makeAnAppointment(appointmentDTO),HttpStatus.OK);
+    }
+
+    @GetMapping("/getAppointmentByConsultant")
+    public ResponseEntity<CustomizedResponse> getAppointmentByConsultantId(@RequestParam Long consultantId)
+    {
+        return new ResponseEntity<CustomizedResponse>(appointmentService.getAppointmentByConsultantId(consultantId),HttpStatus.OK);
+    }
+
+    @GetMapping("/getAppointmentByJObSeeker")
+    public ResponseEntity<CustomizedResponse> getAppointmentByJobSeekerId(@RequestParam Long jobSeekerId)
+    {
+        return new ResponseEntity<CustomizedResponse>(appointmentService.getAppointmentByJobSeekerId(jobSeekerId),HttpStatus.OK);
     }
 
 
