@@ -17,7 +17,7 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker , Long> {
     int getNextJobSeekerId();
 
 
-    @Query(value = "SELECT * FROM JobSeeker WHERE reg_no = ?1 AND status = 1" , nativeQuery = true)
+    @Query(value = "SELECT * FROM job_seeker WHERE reg_no = ?1 AND status = 1" , nativeQuery = true)
     JobSeeker getJobSeekerByRegNo(String regNo);
 
 
