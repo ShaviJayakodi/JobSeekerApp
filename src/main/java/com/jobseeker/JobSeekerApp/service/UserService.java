@@ -45,7 +45,7 @@ public class UserService {
     public boolean checkEmailAddress(String email)
     {
         boolean isValid = false;
-        User user = userRepository.checkEmail(email);
+        User user = userRepository.getUserByUserName(email);
         if(user!=null)
         {
             isValid = false;
