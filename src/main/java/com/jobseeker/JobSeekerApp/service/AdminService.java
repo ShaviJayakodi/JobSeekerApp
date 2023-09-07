@@ -11,6 +11,7 @@ import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class AdminService {
+public class AdminService implements CommandLineRunner {
     @Autowired
     private AdminRepository adminRepository;
 
@@ -38,6 +39,18 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
+    @Override
+    public void run(String... args) throws Exception {
+        // Code to save the first admin object during application startup
+        if (adminRepository.count() == 0) {
+            AdminDTO admin = new AdminDTO();
+            admin.setEmail("admin@email.com");
+            admin.setFirstName("Super");
+            admin.setLastName("Admin");
+            admin.setPassWord("123@#Com");
+            saveAdmin(admin);
+        }
+    }
     public CustomizedResponse saveAdmin(AdminDTO adminDTO) {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         List<String> errorStatus = new ArrayList<>();
@@ -226,4 +239,6 @@ public class AdminService {
         }
         return  customizedResponse;
     }
+
+
 }

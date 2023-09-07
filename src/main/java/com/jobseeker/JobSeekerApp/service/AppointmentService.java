@@ -2,22 +2,17 @@ package com.jobseeker.JobSeekerApp.service;
 
 import com.jobseeker.JobSeekerApp.dto.AppointmentDTO;
 import com.jobseeker.JobSeekerApp.entity.Appointment;
-import com.jobseeker.JobSeekerApp.entity.Consultant;
-import com.jobseeker.JobSeekerApp.entity.Job;
-import com.jobseeker.JobSeekerApp.entity.JobSeeker;
 import com.jobseeker.JobSeekerApp.enums.statusValue;
 import com.jobseeker.JobSeekerApp.repository.AppointmentRepository;
 import com.jobseeker.JobSeekerApp.repository.ConsultantRepository;
 import com.jobseeker.JobSeekerApp.repository.JobRepository;
 import com.jobseeker.JobSeekerApp.repository.JobSeekerRepository;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
-import org.hibernate.boot.jaxb.hbm.spi.JaxbHbmOnDeleteEnum;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -204,7 +199,6 @@ public class AppointmentService {
                 customizedResponse.setStatusList(errorStatus);
                 customizedResponse.setSuccess(false);
             }
-
         }
         catch (Exception exception)
         {
