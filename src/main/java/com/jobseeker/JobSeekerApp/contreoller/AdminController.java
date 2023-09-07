@@ -20,4 +20,32 @@ public class AdminController {
     {
         return new ResponseEntity<CustomizedResponse>(adminService.saveAdmin(adminDTO), HttpStatus.OK);
     }
+
+    @GetMapping("/getAdminByRegNo")
+    public ResponseEntity<CustomizedResponse> getAdminByRegNo(@RequestParam String regNo)
+    {
+        return new ResponseEntity<CustomizedResponse>(adminService.getAdminByRegNo(regNo),HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllAdmin")
+    public ResponseEntity<CustomizedResponse> getAllAdmin()
+    {
+        return new ResponseEntity<CustomizedResponse>(adminService.getAllAdmin(),HttpStatus.OK);
+    }
+
+    @PutMapping("/updateAdmin")
+    public ResponseEntity<CustomizedResponse> updateAdmin(@RequestBody AdminDTO adminDTO)
+    {
+        return new ResponseEntity<CustomizedResponse>(adminService.updateAdmin(adminDTO),HttpStatus.OK);
+    }
+
+    @PutMapping("/deleteAdmin")
+    public ResponseEntity<CustomizedResponse> deleteAdmin(@RequestParam String regNo)
+    {
+        return new ResponseEntity<CustomizedResponse>(adminService.deleteAdmin(regNo),HttpStatus.OK);
+    }
+
+
+
+
 }

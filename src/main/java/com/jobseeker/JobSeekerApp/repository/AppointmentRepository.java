@@ -19,4 +19,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
 
     @Query(value = "SELECT * FROM appointment WHERE consultant_consultant_id =?1 AND status = 1",nativeQuery = true)
     List<Appointment> getAppointmentByConsultantId(long jobSeekerId);
+
+    @Query(value = "SELECT * FROM appointment WHERE status = 1" ,nativeQuery = true)
+    List<Appointment> getAllPendingAppointments();
 }

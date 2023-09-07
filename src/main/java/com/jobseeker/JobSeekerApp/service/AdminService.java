@@ -6,8 +6,10 @@ import com.jobseeker.JobSeekerApp.entity.User;
 import com.jobseeker.JobSeekerApp.enums.stakeHolderValues;
 import com.jobseeker.JobSeekerApp.enums.statusValue;
 import com.jobseeker.JobSeekerApp.repository.AdminRepository;
+import com.jobseeker.JobSeekerApp.repository.UserRepository;
 import com.jobseeker.JobSeekerApp.utils.CustomizedResponse;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,9 @@ public class AdminService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public CustomizedResponse saveAdmin(AdminDTO adminDTO) {
         CustomizedResponse customizedResponse = new CustomizedResponse();
@@ -79,5 +84,146 @@ public class AdminService {
             customizedResponse.setStatusList(errorStatus);
         }
         return customizedResponse;
+    }
+
+    public CustomizedResponse getAdminByRegNo(String regNo)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            Admin admin = adminRepository.getAdminByRegNo(regNo);
+            if(admin!=null)
+            {
+                customizedResponse.setSuccess(true);
+                customizedResponse.setResponse(admin);
+            }
+            else
+            {
+                errorStatus.add("Admin not found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
+    public CustomizedResponse getAllAdmin()
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            List<Admin> adminList = modelMapper.map(adminRepository.getAllAdmin(),new TypeToken<List<Admin>>(){}.getType());
+            if(adminList.size()>0)
+            {
+                customizedResponse.setSuccess(true);
+                customizedResponse.setResponse(adminList);
+            }
+            else
+            {
+                errorStatus.add("No any admin found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
+
+    public CustomizedResponse updateAdmin(AdminDTO adminDTO)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try {
+            if(adminRepository.existsById(adminDTO.getAdminId()))
+            {
+                Admin admin = modelMapper.map(adminDTO,Admin.class);
+                admin.setStatus(statusValue.ACTIVE.sts());
+                if(adminRepository.save(admin)!=null)
+                {
+                    customizedResponse.setSuccess(true);
+                    customizedResponse.setResponse(admin);
+                }
+                else
+                {
+                    errorStatus.add("Update Failed.!");
+                    customizedResponse.setSuccess(false);
+                    customizedResponse.setStatusList(errorStatus);
+                }
+
+            }
+            else
+            {
+                errorStatus.add("Admin Not Found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception) {
+
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+
+    }
+
+    public CustomizedResponse deleteAdmin(String regNo) {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            Admin admin =adminRepository.getAdminByRegNo(regNo);
+            if(admin!=null)
+            {
+                admin.setStatus(statusValue.DEACTIVE.sts());
+                if(adminRepository.save(admin)!=null)
+                {
+                    User user = userRepository.getUserByRegNo(regNo);
+                    user.setStatus(statusValue.DEACTIVE.sts());
+                    userRepository.save(user);
+                    errorStatus.add("Update Failed.!");
+                    customizedResponse.setSuccess(false);
+                    customizedResponse.setStatusList(errorStatus);
+                }
+                else
+                {
+                    errorStatus.add("Delete Failed.!");
+                    customizedResponse.setSuccess(false);
+                    customizedResponse.setStatusList(errorStatus);
+                }
+            }
+            else
+            {
+                errorStatus.add("Admin Not Found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return  customizedResponse;
     }
 }

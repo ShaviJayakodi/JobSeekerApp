@@ -27,4 +27,24 @@ public class JobSeekerController {
     {
         return new ResponseEntity<CustomizedResponse>(jobSeekerService.getAllJobSeekers(), HttpStatus.OK);
     }
+
+    @PutMapping("updateJobSeeker")
+    public ResponseEntity<CustomizedResponse> updateJobSeeker(@RequestBody JobSeekerDTO jobSeekerDTO)
+    {
+        return new ResponseEntity<CustomizedResponse>(jobSeekerService.updateJobSeeker(jobSeekerDTO),HttpStatus.OK);
+    }
+
+    @DeleteMapping("deleteJobSeeker")
+    public ResponseEntity<CustomizedResponse> deleteJobSeeker(@RequestParam String regNo)
+    {
+        return new ResponseEntity<CustomizedResponse>(jobSeekerService.deleteJobSeeker(regNo),HttpStatus.OK);
+    }
+
+    @GetMapping("/getJobSeekerByRegNo")
+    public ResponseEntity<CustomizedResponse> getJobSeekerByRegNo(@RequestParam String regNo)
+    {
+        return new ResponseEntity<CustomizedResponse>(jobSeekerService.getJobSeekerByRegNo(regNo),HttpStatus.OK);
+    }
+
+
 }

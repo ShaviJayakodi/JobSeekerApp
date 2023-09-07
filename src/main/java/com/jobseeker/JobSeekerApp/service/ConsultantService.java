@@ -304,5 +304,94 @@ public class ConsultantService {
         return customizedResponse;
     }
 
+    public CustomizedResponse updateConsultant(ConsultantDTO consultantDTO)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            if(consultantRepository.existsById(consultantDTO.getConsultantId()))
+            {
+                Consultant consultant = modelMapper.map(consultantDTO,Consultant.class);
+                consultant.setStatus(statusValue.ACTIVE.sts());
+                if(consultantRepository.save(consultant)!=null)
+                {
+                    errorStatus.add("Successfully Updated!");
+                    customizedResponse.setSuccess(true);
+                    customizedResponse.setStatusList(errorStatus);
+                    customizedResponse.setResponse(consultant);
+                }
+                else
+                {
+                    errorStatus.add("Update Error.!");
+                    customizedResponse.setSuccess(false);
+                    customizedResponse.setStatusList(errorStatus);
+                }
+
+            }
+            else
+            {
+                errorStatus.add("Consultant not found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
+    public CustomizedResponse deleteConsultant (String regNo)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            Consultant consultant = consultantRepository.getConsultantByConsultantIdAndStatus(regNo);
+            if(consultant!=null)
+            {
+                consultant.setStatus(statusValue.DEACTIVE.sts());
+                if(consultantRepository.save(consultant)!=null)
+                {
+                    User user = userRepository.getUserByRegNo(regNo);
+                    user.setStatus(statusValue.DEACTIVE.sts());
+                    userRepository.save(user);
+
+                    errorStatus.add("Successfully Deleted!");
+                    customizedResponse.setSuccess(true);
+                    customizedResponse.setStatusList(errorStatus);
+
+                }
+                else
+                {
+                    errorStatus.add("Delete Error.!");
+                    customizedResponse.setSuccess(false);
+                    customizedResponse.setStatusList(errorStatus);
+                }
+            }
+            else
+            {
+                errorStatus.add("Consultant not found.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
+
+
+
 
 }

@@ -68,4 +68,18 @@ public class ConsultantController {
     {
         return new ResponseEntity<CustomizedResponse>(consultantService.getConsultantByRegNo(regNo),HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteConsultant")
+    public ResponseEntity<CustomizedResponse> deleteConsultant(@RequestParam String regNo)
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.deleteConsultant(regNo),HttpStatus.OK);
+    }
+
+    @PutMapping("/updateConsultant")
+    public ResponseEntity<CustomizedResponse> updateConsultant(@RequestBody ConsultantDTO consultantDTO)
+    {
+        return new ResponseEntity<CustomizedResponse>(consultantService.updateConsultant(consultantDTO),HttpStatus.OK);
+    }
+
+
 }

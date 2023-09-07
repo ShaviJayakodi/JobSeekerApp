@@ -135,5 +135,76 @@ public class UserService {
     }
 
 
+    public CustomizedResponse changePassword(UserDTO userDTO)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try
+        {
+            if(userRepository.getUserByUserName(userDTO.getUserName())!=null)
+            {
+                User user = userRepository.getUserByUserName(userDTO.getUserName());
+                user.setPassword(user.getPassword());
+                if(userRepository.save(user)!=null)
+                {
+                    errorStatus.add("Password change successfully.!");
+                    customizedResponse.setStatusList(errorStatus);
+                    customizedResponse.setSuccess(true);
+                    customizedResponse.setResponse(user);
+                }
+                else
+                {
+                    errorStatus.add("Password change unsuccessful.!");
+                    customizedResponse.setStatusList(errorStatus);
+                    customizedResponse.setSuccess(false);
+                }
+
+            }
+            else
+            {
+                errorStatus.add("Invalid username or email address.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setStatusList(errorStatus);
+            customizedResponse.setSuccess(false);
+        }
+        return customizedResponse;
+    }
+
+
+    public CustomizedResponse checkValidEmail(String email)
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try {
+            boolean isValid  = checkEmailAddress(email);
+            if(isValid)
+            {
+                errorStatus.add("Valid User.!");
+                customizedResponse.setSuccess(true);
+                customizedResponse.setStatusList(errorStatus);
+            }
+            else
+            {
+                errorStatus.add("Invalid User.!");
+                customizedResponse.setSuccess(false);
+                customizedResponse.setStatusList(errorStatus);
+            }
+
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => " +exception );
+            customizedResponse.setSuccess(false);
+            customizedResponse.setStatusList(errorStatus);
+        }
+        return customizedResponse;
+    }
 
 }

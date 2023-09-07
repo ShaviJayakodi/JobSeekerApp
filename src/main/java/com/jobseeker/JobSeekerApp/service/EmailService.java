@@ -97,7 +97,7 @@ public class EmailService {
            simpleMailMessage.setTo(user.getUserName());
            simpleMailMessage.setSubject(subject);
            simpleMailMessage.setText("YOU HAVE REGISTERD TO SYSTEM AS A ADMIN. You can login using your email as a username and<br/>" +
-                   "password = " + user.getPassword());
+            "password = " + user.getPassword());
 
            simpleMailMessage.setFrom(fromMail);
            javaMailSender.send(simpleMailMessage);
@@ -111,12 +111,6 @@ public class EmailService {
        return isSent;
 
     }
-
-
-
-
-
-
 
     public CustomizedResponse registerMail1(MailRegisterDTO mailRegisterDTO)
     {
@@ -189,7 +183,7 @@ public class EmailService {
         }
         catch (Exception exception)
         {
-
+            customizedResponse.setSuccess(false);
         }
         return customizedResponse;
     }

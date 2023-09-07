@@ -26,4 +26,17 @@ public class UserController {
     {
         return null;
     }
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<CustomizedResponse> changePassword (@RequestBody UserDTO userDTO)
+    {
+        return new ResponseEntity<CustomizedResponse>(userService.changePassword(userDTO),HttpStatus.OK);
+    }
+
+    @GetMapping("/checkEmailAddress")
+    public ResponseEntity<CustomizedResponse> checkEmailAddress(String email)
+    {
+        return new ResponseEntity<CustomizedResponse>(userService.checkValidEmail(email),HttpStatus.OK);
+    }
+
 }

@@ -215,8 +215,38 @@ public class AppointmentService {
         return customizedResponse;
     }
 
+    public CustomizedResponse getAllPendingAppointments()
+    {
+        CustomizedResponse customizedResponse = new CustomizedResponse();
+        List<String> errorStatus = new ArrayList<>();
+        try {
+            List<Appointment> appointmentList = modelMapper.map(appointmentRepository.getAllPendingAppointments(),new TypeToken<List<Appointment>>(){}.getType());
+            if(appointmentList.size()>0)
+            {
+                customizedResponse.setSuccess(true);
+                customizedResponse.setResponse(appointmentList);
+            }
+            else
+            {
+                errorStatus.add("No any pending appointments.!");
+                customizedResponse.setStatusList(errorStatus);
+                customizedResponse.setSuccess(false);
+            }
+        }
+        catch (Exception exception)
+        {
+            errorStatus.add("Error => "+exception);
+            customizedResponse.setStatusList(errorStatus);
+            customizedResponse.setSuccess(false);
+        }
+
+
+        return customizedResponse;
+    }
+
+
     //todo
-    public CustomizedResponse updateAppointment(long appointmentId)
+    /*public CustomizedResponse updateAppointment(long appointmentId)
     {
         CustomizedResponse customizedResponse = new CustomizedResponse();
         List<String> errorStatus = new ArrayList<>();
@@ -254,6 +284,8 @@ public class AppointmentService {
             customizedResponse.setSuccess(false);
         }
         return customizedResponse;
-    }
+    }*/
+
+
 
 }

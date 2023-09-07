@@ -54,5 +54,12 @@ public class AppointmentController {
         return new ResponseEntity<CustomizedResponse>(appointmentService.getAppointmentByJobSeekerId(jobSeekerId),HttpStatus.OK);
     }
 
+    @GetMapping("/getAllPendingAppointments")
+    public ResponseEntity <CustomizedResponse> getAllPendingAppointments ()
+    {
+        return new ResponseEntity<CustomizedResponse>(appointmentService.getAllPendingAppointments(),HttpStatus.OK);
+    }
+
+
 
 }
